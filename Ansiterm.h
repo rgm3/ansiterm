@@ -57,19 +57,18 @@ The latest version of this software is available at
 
 
 class Ansiterm {
-
 public:
-	Ansiterm();
-	void home();
-	void xy(int x, int y);
-	void up(int x);
-	void down(int x);
-	void forward(int x);
-	void backward(int x);
-	void eraseLine();
-	void eraseScreen();
-	void setBackgroundColor(int color);
-	void setForegroundColor(int color);
+  Ansiterm(Stream& useStream) : _stream(useStream){}
+  void home();
+  void xy(int x, int y);
+  void up(int x);
+  void down(int x);
+  void forward(int x);
+  void backward(int x);
+  void eraseLine();
+  void eraseScreen();
+  void setBackgroundColor(int color);
+  void setForegroundColor(int color);
   void boldOn();
   void boldOff();
   void underlineOn();
@@ -85,9 +84,9 @@ public:
   void defaultForeground();
   void fill(int x1, int y1, int x2, int y2);
 private:
-	void preamble();
-	void preambleAndNumberAndValue(int x, char v);
-	void setAttribute(int a);
-
+  Stream& _stream;
+  void preamble();
+  void preambleAndNumberAndValue(int x, char v);
+  void setAttribute(int a);
 };
 #endif

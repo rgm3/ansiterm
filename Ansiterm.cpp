@@ -31,157 +31,129 @@ The latest version of this software is available at
 #include "Arduino.h"
 #include "Ansiterm.h"
 
-Ansiterm::Ansiterm()
-{
-}
-
-
 void Ansiterm::home()
 {
   preamble();
-  Serial.write('H');
+  _stream.write('H');
 }
-
 
 void Ansiterm::xy(int x, int y)
 {
   preamble();
-  Serial.print(y,DEC);
-  Serial.write(';');
-  Serial.print(x, DEC);
-  Serial.write('H');
+  _stream.print(y,DEC);
+  _stream.write(';');
+  _stream.print(x, DEC);
+  _stream.write('H');
 }
-
 
 void Ansiterm::up(int x)
 {
   preambleAndNumberAndValue(x,'A');
 }
 
-
 void Ansiterm::down(int x)
 {
   preambleAndNumberAndValue(x,'B');
 }
-
 
 void Ansiterm::forward(int x)
 {
   preambleAndNumberAndValue(x,'C');
 }
 
-
 void Ansiterm::backward(int x)
 {
   preambleAndNumberAndValue(x,'D');
 }
 
-
 void Ansiterm::eraseLine()
 {
   preamble();
-  Serial.write('2');
-  Serial.write('K');
+  _stream.write('2');
+  _stream.write('K');
 }
-
 
 void Ansiterm::eraseScreen()
 {
   preamble();
-  Serial.write('1');
-  Serial.write('J');
+  _stream.write('1');
+  _stream.write('J');
 }
-
 
 void Ansiterm::setBackgroundColor(int color)
 {
   setAttribute(color + 40);
 }
 
-
 void Ansiterm::setForegroundColor(int color)
 {
   setAttribute(color + 30);
 }
-
 
 void Ansiterm::boldOn()
 {
   setAttribute(BOLD_ON);
 }
 
-
 void Ansiterm::boldOff()
 {
   setAttribute(BOLD_OFF);
 }
-
 
 void Ansiterm::italicsOn()
 {
   setAttribute(ITALICS_ON);
 }
 
-
 void Ansiterm::italicsOff()
 {
   setAttribute(ITALICS_OFF);
 }
-
 
 void Ansiterm::underlineOn()
 {
   setAttribute(UNDERLINE_ON);
 }
 
-
 void Ansiterm::underlineOff()
 {
   setAttribute(UNDERLINE_OFF);
 }
-
 
 void Ansiterm::strikethroughOn()
 {
   setAttribute(STRIKETHROUGH_ON);
 }
 
-
 void Ansiterm::strikethroughOff()
 {
   setAttribute(STRIKETHROUGH_OFF);
 }
-
 
 void Ansiterm::inverseOn()
 {
   setAttribute(INVERSE_ON);
 }
 
-
 void Ansiterm::inverseOff()
 {
   setAttribute(INVERSE_OFF);
 }
-
 
 void Ansiterm::reset()
 {
   setAttribute(RESET);
 }
 
-
 void Ansiterm::defaultBackground()
 {
   setAttribute(DEFAULT_BACKGROUND);
 }
 
-
 void Ansiterm::defaultForeground()
 {
   setAttribute(DEFAULT_FOREGROUND);
 }
-
 
 void Ansiterm::fill(int x1, int y1, int x2, int y2)
 {
@@ -190,27 +162,24 @@ void Ansiterm::fill(int x1, int y1, int x2, int y2)
     for (int y = y1; y <= y2; y++)
     {
       xy(x,y);
-      Serial.print(' ');
+      _stream.print(' ');
     }
   }
 }
 
-
 /* private functions */
 void Ansiterm::preamble()
 {
-  Serial.write(ESCAPE);
-  Serial.write(BRACE);
+  _stream.write(ESCAPE);
+  _stream.write(BRACE);
 }
-
 
 void Ansiterm::preambleAndNumberAndValue(int x, char v)
 {
   preamble();
-  Serial.print(x,DEC);
-  Serial.write(v);
+  _stream.print(x,DEC);
+  _stream.write(v);
 }
-
 
 void Ansiterm::setAttribute(int a)
 {
