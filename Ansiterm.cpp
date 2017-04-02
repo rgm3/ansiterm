@@ -185,3 +185,56 @@ void Ansiterm::setAttribute(int a)
 {
   preambleAndNumberAndValue(a, 'm');
 }
+
+void Ansiterm::deviceStatusReport()
+{
+  preambleAndNumberAndValue(6, 'n');
+}
+
+unsigned long Ansiterm::detectSize(unsigned long timeout)
+{
+  xy(900,900);
+  deviceStatusReport();
+  timeout += millis();
+  unsigned char ncount = 0;
+  unsigned int num = 0;
+  unsigned char wasdigit = false;
+  char c = 0;
+  maxX = 0;
+  maxY = 0;
+  while (!isalpha(c) && millis() < timeout) {
+    if (_stream.available() > 0) {
+      c = _stream.read();
+      if (isdigit(c)) {
+        num *= 10;
+        num += c - '0';
+        wasdigit = true;
+      } 
+      else {
+        if (wasdigit) {
+          wasdigit = false;
+          ++ncount;
+          switch (ncount) {
+          case 1:
+            maxY = num;
+            break;
+          case 2:
+            maxX = num;
+            break;
+          }
+          num = 0;
+        }
+      }
+    }
+  }
+  return timeout - millis();
+}
+
+unsigned int Ansiterm::getMaxX() {
+	return maxX;
+}
+
+unsigned int Ansiterm::getMaxY() {
+	return maxY;
+}
+

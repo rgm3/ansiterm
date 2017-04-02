@@ -83,10 +83,16 @@ public:
   void defaultBackground();
   void defaultForeground();
   void fill(int x1, int y1, int x2, int y2);
+  unsigned long detectSize(unsigned long timeout);
+  unsigned int getMaxX();
+  unsigned int getMaxY();
 private:
   Stream& _stream;
+  unsigned int maxX = 0;
+  unsigned int maxY = 0;
   void preamble();
   void preambleAndNumberAndValue(int x, char v);
   void setAttribute(int a);
+  void deviceStatusReport();
 };
 #endif
