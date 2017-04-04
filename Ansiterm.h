@@ -86,6 +86,7 @@ public:
   unsigned long detectSize(unsigned long timeout);
   unsigned int getMaxX();
   unsigned int getMaxY();
+  unsigned long getCurrentXY(unsigned long timeout, unsigned int* x, unsigned int* y);
 private:
   Stream& _stream;
   unsigned int maxX = 0;

@@ -194,15 +194,20 @@ void Ansiterm::deviceStatusReport()
 unsigned long Ansiterm::detectSize(unsigned long timeout)
 {
   xy(900,900);
-  deviceStatusReport();
+  return getCurrentXY(timeout, &maxX, &maxY);
+}
+
+unsigned long Ansiterm::getCurrentXY(unsigned long timeout, unsigned int* x, unsigned int* y)
+{
   timeout += millis();
+  deviceStatusReport();
   unsigned char ncount = 0;
   unsigned int num = 0;
   unsigned char wasdigit = false;
   char c = 0;
-  maxX = 0;
-  maxY = 0;
-  while (!isalpha(c) && millis() < timeout) {
+  *x = 0;
+  *y = 0;
+  while (!isalpha(c) && millis() < timeout && ncount < 3) {
     if (_stream.available() > 0) {
       c = _stream.read();
       if (isdigit(c)) {
@@ -216,10 +221,10 @@ unsigned long Ansiterm::detectSize(unsigned long timeout)
           ++ncount;
           switch (ncount) {
           case 1:
-            maxY = num;
+            *y = num;
             break;
           case 2:
-            maxX = num;
+            *x = num;
             break;
           }
           num = 0;
