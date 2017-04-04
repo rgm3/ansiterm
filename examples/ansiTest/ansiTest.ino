@@ -2,7 +2,7 @@
 
 char * messages[][3] = {{"Name", "Age", "Favorite Sport"}, {"Bruce", "42", "Arduino"}, {"John", "23", "Baseball"}, {"Joel", "9", "Swimming"}, {"Phoebe", "14", "Highland Dancing"}};
 
-Ansiterm ansi;
+Ansiterm ansi(Serial);
 void setup() {
   Serial.begin(38400);
 }
