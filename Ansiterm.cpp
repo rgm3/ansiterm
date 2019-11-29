@@ -28,177 +28,104 @@ Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 The latest version of this software is available at
 */
 
-#include "Arduino.h"
 #include "Ansiterm.h"
 
-void Ansiterm::home()
-{
+#include "Arduino.h"
+
+void Ansiterm::home() {
   preamble();
   _stream.write('H');
 }
 
-void Ansiterm::xy(int x, int y)
-{
+void Ansiterm::xy(int x, int y) {
   preamble();
-  _stream.print(y,DEC);
+  _stream.print(y, DEC);
   _stream.write(';');
   _stream.print(x, DEC);
   _stream.write('H');
 }
 
-void Ansiterm::up(int x)
-{
-  preambleAndNumberAndValue(x,'A');
-}
+void Ansiterm::up(int x) { preambleAndNumberAndValue(x, 'A'); }
 
-void Ansiterm::down(int x)
-{
-  preambleAndNumberAndValue(x,'B');
-}
+void Ansiterm::down(int x) { preambleAndNumberAndValue(x, 'B'); }
 
-void Ansiterm::forward(int x)
-{
-  preambleAndNumberAndValue(x,'C');
-}
+void Ansiterm::forward(int x) { preambleAndNumberAndValue(x, 'C'); }
 
-void Ansiterm::backward(int x)
-{
-  preambleAndNumberAndValue(x,'D');
-}
+void Ansiterm::backward(int x) { preambleAndNumberAndValue(x, 'D'); }
 
-void Ansiterm::eraseLine()
-{
+void Ansiterm::eraseLine() {
   preamble();
   _stream.write('2');
   _stream.write('K');
 }
 
-void Ansiterm::eraseScreen()
-{
+void Ansiterm::eraseScreen() {
   preamble();
   _stream.write('1');
   _stream.write('J');
 }
 
-void Ansiterm::setBackgroundColor(int color)
-{
-  setAttribute(color + 40);
-}
+void Ansiterm::setBackgroundColor(int color) { setAttribute(color + 40); }
 
-void Ansiterm::setForegroundColor(int color)
-{
-  setAttribute(color + 30);
-}
+void Ansiterm::setForegroundColor(int color) { setAttribute(color + 30); }
 
-void Ansiterm::boldOn()
-{
-  setAttribute(BOLD_ON);
-}
+void Ansiterm::boldOn() { setAttribute(BOLD_ON); }
 
-void Ansiterm::boldOff()
-{
-  setAttribute(BOLD_OFF);
-}
+void Ansiterm::boldOff() { setAttribute(BOLD_OFF); }
 
-void Ansiterm::italicsOn()
-{
-  setAttribute(ITALICS_ON);
-}
+void Ansiterm::italicsOn() { setAttribute(ITALICS_ON); }
 
-void Ansiterm::italicsOff()
-{
-  setAttribute(ITALICS_OFF);
-}
+void Ansiterm::italicsOff() { setAttribute(ITALICS_OFF); }
 
-void Ansiterm::underlineOn()
-{
-  setAttribute(UNDERLINE_ON);
-}
+void Ansiterm::underlineOn() { setAttribute(UNDERLINE_ON); }
 
-void Ansiterm::underlineOff()
-{
-  setAttribute(UNDERLINE_OFF);
-}
+void Ansiterm::underlineOff() { setAttribute(UNDERLINE_OFF); }
 
-void Ansiterm::strikethroughOn()
-{
-  setAttribute(STRIKETHROUGH_ON);
-}
+void Ansiterm::strikethroughOn() { setAttribute(STRIKETHROUGH_ON); }
 
-void Ansiterm::strikethroughOff()
-{
-  setAttribute(STRIKETHROUGH_OFF);
-}
+void Ansiterm::strikethroughOff() { setAttribute(STRIKETHROUGH_OFF); }
 
-void Ansiterm::inverseOn()
-{
-  setAttribute(INVERSE_ON);
-}
+void Ansiterm::inverseOn() { setAttribute(INVERSE_ON); }
 
-void Ansiterm::inverseOff()
-{
-  setAttribute(INVERSE_OFF);
-}
+void Ansiterm::inverseOff() { setAttribute(INVERSE_OFF); }
 
-void Ansiterm::reset()
-{
-  setAttribute(RESET);
-}
+void Ansiterm::reset() { setAttribute(RESET); }
 
-void Ansiterm::defaultBackground()
-{
-  setAttribute(DEFAULT_BACKGROUND);
-}
+void Ansiterm::defaultBackground() { setAttribute(DEFAULT_BACKGROUND); }
 
-void Ansiterm::defaultForeground()
-{
-  setAttribute(DEFAULT_FOREGROUND);
-}
+void Ansiterm::defaultForeground() { setAttribute(DEFAULT_FOREGROUND); }
 
-void Ansiterm::fill(int x1, int y1, int x2, int y2)
-{
-  for (int x = x1; x <= x2; x++)
-  {
-    for (int y = y1; y <= y2; y++)
-    {
-      xy(x,y);
+void Ansiterm::fill(int x1, int y1, int x2, int y2) {
+  for (int x = x1; x <= x2; x++) {
+    for (int y = y1; y <= y2; y++) {
+      xy(x, y);
       _stream.print(' ');
     }
   }
 }
 
 /* private functions */
-void Ansiterm::preamble()
-{
+void Ansiterm::preamble() {
   _stream.write(ESCAPE);
   _stream.write(BRACE);
 }
 
-void Ansiterm::preambleAndNumberAndValue(int x, char v)
-{
+void Ansiterm::preambleAndNumberAndValue(int x, char v) {
   preamble();
-  _stream.print(x,DEC);
+  _stream.print(x, DEC);
   _stream.write(v);
 }
 
-void Ansiterm::setAttribute(int a)
-{
-  preambleAndNumberAndValue(a, 'm');
-}
+void Ansiterm::setAttribute(int a) { preambleAndNumberAndValue(a, 'm'); }
 
-void Ansiterm::deviceStatusReport()
-{
-  preambleAndNumberAndValue(6, 'n');
-}
+void Ansiterm::deviceStatusReport() { preambleAndNumberAndValue(6, 'n'); }
 
-unsigned long Ansiterm::detectSize(unsigned long timeout)
-{
-  xy(900,900);
+unsigned long Ansiterm::detectSize(unsigned long timeout) {
+  xy(900, 900);
   return getCurrentXY(timeout, &maxX, &maxY);
 }
 
-unsigned long Ansiterm::getCurrentXY(unsigned long timeout, unsigned int* x, unsigned int* y)
-{
+unsigned long Ansiterm::getCurrentXY(unsigned long timeout, unsigned int* x, unsigned int* y) {
   timeout += millis();
   deviceStatusReport();
   unsigned char ncount = 0;
@@ -214,8 +141,7 @@ unsigned long Ansiterm::getCurrentXY(unsigned long timeout, unsigned int* x, uns
         num *= 10;
         num += c - '0';
         wasdigit = true;
-      } 
-      else {
+      } else {
         if (wasdigit) {
           wasdigit = false;
           ++ncount;
@@ -235,11 +161,6 @@ unsigned long Ansiterm::getCurrentXY(unsigned long timeout, unsigned int* x, uns
   return timeout - millis();
 }
 
-unsigned int Ansiterm::getMaxX() {
-	return maxX;
-}
+unsigned int Ansiterm::getMaxX() { return maxX; }
 
-unsigned int Ansiterm::getMaxY() {
-	return maxY;
-}
-
+unsigned int Ansiterm::getMaxY() { return maxY; }

@@ -35,7 +35,7 @@ The latest version of this software is available at
 #define BRACE '['
 #define BLACK 0
 #define RED 1
-#define	GREEN 2
+#define GREEN 2
 #define YELLOW 3
 #define BLUE 4
 #define MAGENTA 5
@@ -55,10 +55,9 @@ The latest version of this software is available at
 #define DEFAULT_FOREGROUND 39
 #define DEFAULT_BACKGROUND 49
 
-
 class Ansiterm {
 public:
-  Ansiterm(Stream& useStream) : _stream(useStream){}
+  Ansiterm(Stream& useStream) : _stream(useStream) {}
   void home();
   void xy(int x, int y);
   void up(int x);
@@ -87,6 +86,7 @@ public:
   unsigned int getMaxX();
   unsigned int getMaxY();
   unsigned long getCurrentXY(unsigned long timeout, unsigned int* x, unsigned int* y);
+
 private:
   Stream& _stream;
   unsigned int maxX = 0;
